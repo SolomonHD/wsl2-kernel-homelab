@@ -1,0 +1,3 @@
+version: 1
+id: wsl2-kernel-homelab
+remote: https://github.com/SolomonHD/wsl2-kernel-homelab.git

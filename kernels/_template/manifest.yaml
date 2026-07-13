@@ -1,0 +1,51 @@
+schema_version: 2
+status: planned
+previous_status: null
+failure:
+  stage: null
+  reason: null
+upstream:
+  repository: https://github.com/microsoft/WSL2-Linux-Kernel
+  tag: <upstream-tag>
+  commit: <40-character-commit>
+kernel_release: null
+config:
+  fragment:
+    path: config/homelab.config
+    sha256: null
+  normalized:
+    path: config/config-wsl-homelab
+    sha256: null
+build:
+  architecture: x86_64
+  compiler: null
+  timestamp: null
+artifacts:
+  kernel:
+    name: null
+    sha256: null
+    size_bytes: null
+    kernel_release: null
+  modules_vhdx:
+    name: null
+    sha256: null
+    size_bytes: null
+    kernel_release: null
+validation:
+  build:
+    report: validation/build.md
+    status: pending
+  runtime:
+    report: validation/runtime.md
+    status: pending
+  validated_at: null
+capabilities:
+  wireguard: null
+  ipv6: null
+  docker: null
+  connmark: null
+publication:
+  release_tag: null
+  release_url: null
+  published_at: null
+  supersedes: null

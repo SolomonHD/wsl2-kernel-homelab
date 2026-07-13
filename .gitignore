@@ -1,0 +1,22 @@
+# Generated catalog and release output
+dist/
+build/
+out/
+output/
+artifacts/
+modules-staging/
+modules.vhdx
+*.vhdx
+*.vhd
+*.qcow2
+*.img
+bzImage
+vmlinux
+System.map
+Module.symvers
+modules.order
+
+# Python tooling
+__pycache__/
+*.py[cod]
+

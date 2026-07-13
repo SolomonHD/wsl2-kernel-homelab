@@ -1,94 +1,40 @@
 # AGENTS.md
 
-This file provides guidance to AI coding agents working in this repository.
+This repository is the lightweight OpenSpec and release-record catalog for custom WSL2 homelab
+kernels. It tracks specifications, exact-tag config fragments and normalized configs, manifests,
+checksums, documentation, validation evidence, and release metadata.
 
-## Repository Purpose
+## Non-negotiable boundaries
 
-This is an **OpenSpec store** — a standalone specifications repository for tracking custom WSL2 kernel builds for homelab self-hosting. It does **not** contain kernel source code.
+- Keep Microsoft kernel source in a separate pristine shallow `microsoft/WSL2-Linux-Kernel` clone.
+- Never copy kernel source, a build tree, kernel image, module staging tree, or VHDX into this repo.
+- Store generated binaries only in ignored output paths and validated GitHub Release assets.
+- Key every record by the exact `linux-msft-wsl-*` upstream tag and full commit.
+- Prefer config-only changes. Propose and justify any patch, store it as a patch artifact, and include
+  it with release source provenance; never edit the upstream clone in place.
+- Treat the kernel and matching modules VHDX as one build and deployment unit.
 
-The actual kernel source lives in the upstream [microsoft/WSL2-Linux-Kernel](https://github.com/microsoft/WSL2-Linux-Kernel) repository, which is expected to be cloned separately and kept as a pristine shallow clone. This repo tracks what changes we make to the kernel config and why.
+## Required workflow
 
-## Key Principles
+1. Create or update an OpenSpec change before implementing a kernel configuration decision.
+2. Copy `kernels/_template/` to `kernels/<upstream-tag>/`; use only required record filenames.
+3. Keep unknown planned fields explicit as null and follow `planned → built → validated → published`.
+4. On a failed stage, use `failed` and record both the stage and reason before resuming work.
+5. Generate config out of tree, run `olddefconfig`, strictly verify required symbols, and retain its
+   complete normalized snapshot and checksum.
+6. Install runtime modules with `INSTALL_MOD_STRIP=1`, verify staged `.ko` files have no `.debug*`
+   sections, and record artifact names, byte sizes, and checksums.
+7. Require build and runtime `PASS` evidence for WireGuard, IPv6, Docker/overlayfs/bridge/NAT, and
+   CONNMARK before `validated`.
+8. Run release preflight before tags or releases. Exact mirrored tags are immutable; corrected builds
+   use the next `-homelab.<revision>` suffix and supersession notes.
+9. Mark `published` only after remote release and required assets are confirmed.
 
-1. **No kernel source in this repo** — only specs, changes, configs, and documentation
-2. **Upstream stays pristine** — the WSL2 kernel clone should be shallow (`--depth=1 --no-tags`) with specific tags fetched on demand
-3. **Spec-driven workflow** — all kernel build decisions are documented as OpenSpec specs before implementation
-4. **Homelab focus** — changes should serve self-hosting use cases: Docker Desktop, IPv6, WireGuard, networking, and container workloads
+Run the commands in [`CONTRIBUTING.md`](CONTRIBUTING.md) before completion. Regenerate the README
+matrix with `python3 scripts/catalog.py matrix` after manifest edits. Never bypass a failing catalog,
+documentation, tracked-artifact, release, test, or strict OpenSpec validation.
 
-## OpenSpec Workflow
-
-This repo uses [OpenSpec](https://openspec.dev/) for spec-driven development. Key commands:
-
-```bash
-# Initialize OpenSpec in this repo
-openspec init
-
-# Create a new change (e.g., "enable-wireguard")
-openspec new change enable-wireguard
-
-# List active changes
-openspec list
-
-# Archive a completed change
-openspec archive enable-wireguard
-```
-
-### Typical Change Flow
-
-1. `openspec new change <name>` — scaffold the change
-2. AI drafts proposal, specs, design, and tasks via `/opsx:propose`
-3. Review and refine artifacts
-4. Implement in the separate kernel clone
-5. `openspec archive <name>` — finalize and merge specs
-
-## Working with the Upstream Kernel
-
-The upstream kernel is managed separately:
-
-```bash
-# Initial shallow clone (no history, no tags)
-git clone --depth=1 --no-tags https://github.com/microsoft/WSL2-Linux-Kernel.git
-
-# Fetch a specific tag when needed
-TAG="linux-msft-wsl-6.6.87.0" && git fetch --depth=1 origin tag "$TAG"
-git checkout "$TAG"
-```
-
-Never commit kernel source code to this repo. Kernel config files (`.config`) may be committed as artifacts within OpenSpec changes.
-
-## File Structure
-
-```
-openspec/
-├── specs/           # Source of truth — what the custom kernel includes
-│   └── <domain>/
-│       └── spec.md
-├── changes/         # Proposed and archived changes
-│   ├── <change-name>/
-│   │   ├── proposal.md
-│   │   ├── design.md
-│   │   ├── tasks.md
-│   │   └── specs/
-│   └── archive/
-└── config.yaml      # OpenSpec configuration
-```
-
-## Domains (Expected)
-
-- `docker-desktop` — Docker Desktop compatibility and container runtime support
-- `networking` — IPv6, WireGuard, and advanced networking features
-- `kernel-config` — General kernel configuration changes and module enablement
-- `selfhosting` — Self-hosting specific tunings and features
-
-## Contributing
-
-1. Create an OpenSpec change documenting what and why
-2. Implement the kernel config changes in a separate kernel clone
-3. Test the built kernel
-4. Archive the change with the resulting config
-
-## Tools
-
-- [OpenSpec](https://openspec.dev/) — spec-driven development framework
-- [Git](https://git-scm.com/) — version control for specs and changes
-- The upstream kernel is built using standard Linux kernel build tooling (make, gcc, etc.) in a separate clone
+Detailed policies live in [`docs/repository-structure.md`](docs/repository-structure.md),
+[`docs/build-and-deploy.md`](docs/build-and-deploy.md), [`docs/validation.md`](docs/validation.md), and
+[`docs/release.md`](docs/release.md). Migration and pairwise rollback live in
+[`docs/wsl-kernel-migration.md`](docs/wsl-kernel-migration.md).
