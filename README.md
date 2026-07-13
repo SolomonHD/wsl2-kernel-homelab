@@ -24,7 +24,7 @@ deployment.
 <!-- BEGIN GENERATED SUPPORT MATRIX -->
 | Upstream tag | Commit | Kernel release | Status | Validated | Capabilities | Release |
 | --- | --- | --- | --- | --- | --- | --- |
-| [linux-msft-wsl-6.18.35.2](kernels/linux-msft-wsl-6.18.35.2/) | `1bd4ed3d4ada` | 6.18.35.2-microsoft-standard-WSL2+ | **validated** | 2026-07-13T20:37:40+00:00 | wireguard, ipv6, docker, connmark | Not available |
+| [linux-msft-wsl-6.18.35.2](kernels/linux-msft-wsl-6.18.35.2/) | `1bd4ed3d4ada` | 6.18.35.2-microsoft-standard-WSL2+ | **published** | 2026-07-13T20:37:40+00:00 | wireguard, ipv6, docker, connmark | [Download](https://github.com/SolomonHD/wsl2-kernel-homelab/releases/tag/linux-msft-wsl-6.18.35.2) |
 <!-- END GENERATED SUPPORT MATRIX -->
 
 ## Current baseline

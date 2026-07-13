@@ -1,6 +1,6 @@
 schema_version: 2
-status: validated
-previous_status: built
+status: published
+previous_status: validated
 failure:
   stage: null
   reason: null
@@ -45,7 +45,7 @@ capabilities:
   docker: true
   connmark: true
 publication:
-  release_tag: null
-  release_url: null
-  published_at: null
+  release_tag: linux-msft-wsl-6.18.35.2
+  release_url: https://github.com/SolomonHD/wsl2-kernel-homelab/releases/tag/linux-msft-wsl-6.18.35.2
+  published_at: '2026-07-13T20:49:44+00:00'
   supersedes: null

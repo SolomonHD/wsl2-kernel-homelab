@@ -27,6 +27,12 @@ class BuildKernelTests(unittest.TestCase):
         manifest["validation"]["validated_at"] = "2026-01-02T00:00:00+00:00"
         for capability in manifest["capabilities"]:
             manifest["capabilities"][capability] = True
+        manifest["publication"].update(
+            release_tag=None,
+            release_url=None,
+            published_at=None,
+            supersedes=None,
+        )
         return Baseline(
             record=record,
             manifest=manifest,

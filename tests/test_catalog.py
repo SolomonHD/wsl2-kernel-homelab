@@ -43,6 +43,16 @@ class CatalogTests(unittest.TestCase):
         (self.root / "openspec").mkdir()
         self.record = self.root / "kernels" / TAG
         shutil.copytree(ROOT / "kernels" / TAG, self.record)
+        manifest = load_manifest(self.record / "manifest.yaml")
+        manifest["status"] = "validated"
+        manifest["previous_status"] = "built"
+        manifest["publication"].update(
+            release_tag=None,
+            release_url=None,
+            published_at=None,
+            supersedes=None,
+        )
+        write_manifest(self.record / "manifest.yaml", manifest)
 
     def tearDown(self) -> None:
         self.temporary.cleanup()
