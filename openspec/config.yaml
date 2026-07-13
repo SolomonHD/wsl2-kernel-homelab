@@ -1,0 +1,33 @@
+schema: spec-driven
+
+context: |
+  This standalone OpenSpec store defines reproducible custom WSL2 kernel builds
+  for homelab and self-hosting workloads. It tracks required kernel configuration
+  symbols and build decisions, including CONNMARK/netfilter support, container
+  networking, IPv6, WireGuard, and other flags needed by homelab services.
+
+  Kernel source is never committed here. The source of truth for kernel code is
+  microsoft/WSL2-Linux-Kernel, maintained as a separate pristine shallow clone
+  with no tag history. Fetch only the exact upstream tag needed for a build.
+  This repository may contain OpenSpec artifacts, kernel config fragments or
+  complete .config snapshots, build instructions, and test evidence.
+
+  Prefer config-only changes. Any source patch must be explicitly proposed,
+  justified, and kept as a patch artifact rather than copied kernel source.
+
+rules:
+  proposal:
+    - Identify the homelab use case and why the stock WSL2 kernel config is insufficient.
+    - State the intended Microsoft WSL2 kernel tag or baseline when known.
+    - Keep kernel source and upstream repository changes explicitly out of scope unless a patch is required.
+  specs:
+    - Name exact CONFIG_* symbols and their required values (y, m, or n).
+    - Describe dependencies among kernel config symbols and the runtime behavior they enable.
+    - Include scenarios for verifying the built kernel exposes the required capability.
+  design:
+    - Explain whether each option is built in or modular and why.
+    - Record compatibility, security, image-size, and maintenance tradeoffs where relevant.
+    - Preserve the upstream clone as a pristine shallow clone and fetch tags individually.
+  tasks:
+    - Include config generation or merge steps, olddefconfig validation, kernel build validation, and runtime verification as applicable.
+    - Record the exact upstream tag, resulting config artifact, and test evidence.

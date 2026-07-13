@@ -1,0 +1,51 @@
+schema_version: 2
+status: validated
+previous_status: built
+failure:
+  stage: null
+  reason: null
+upstream:
+  repository: https://github.com/microsoft/WSL2-Linux-Kernel
+  tag: linux-msft-wsl-6.18.35.2
+  commit: 1bd4ed3d4ada93738eef3fc2a66b674c640dc326
+kernel_release: 6.18.35.2-microsoft-standard-WSL2+
+config:
+  fragment:
+    path: config/homelab.config
+    sha256: a1a95f8f073fe6c73f3c2de4920d9bedc56a0be9d66147d5685600f09c5c8684
+  normalized:
+    path: config/config-wsl-homelab
+    sha256: 1f1175524f23b3cd2d9aacaaa6553c4ea8dd22cb1c7c085966e0e4ae90f3eb71
+build:
+  architecture: x86_64
+  compiler: gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+  timestamp: '2026-07-13T19:48:45+00:00'
+artifacts:
+  kernel:
+    name: linux-msft-wsl-6.18.35.2
+    sha256: b8ab38766bd36897ebdd629120bea9c1b779e442a9a81897b0ebaedb0bbfc435
+    size_bytes: 17322496
+    kernel_release: 6.18.35.2-microsoft-standard-WSL2+
+  modules_vhdx:
+    name: modules-linux-msft-wsl-6.18.35.2.vhdx
+    sha256: c0cd43237a0747d75c663e333cb4912a9077d7e26093de418cec8fc5b665385f
+    size_bytes: 226492416
+    kernel_release: 6.18.35.2-microsoft-standard-WSL2+
+validation:
+  build:
+    report: validation/build.md
+    status: pass
+  runtime:
+    report: validation/runtime.md
+    status: pass
+  validated_at: '2026-07-13T20:37:40+00:00'
+capabilities:
+  wireguard: true
+  ipv6: true
+  docker: true
+  connmark: true
+publication:
+  release_tag: null
+  release_url: null
+  published_at: null
+  supersedes: null

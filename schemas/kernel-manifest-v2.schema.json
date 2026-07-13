@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SolomonHD/wsl2-kernel-homelab/schemas/kernel-manifest-v2.schema.json",
+  "title": "WSL2 homelab kernel catalog manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "status", "previous_status", "failure", "upstream",
+    "kernel_release", "config", "build", "artifacts", "validation",
+    "capabilities", "publication"
+  ],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "status": { "enum": ["planned", "built", "validated", "published", "failed"] },
+    "previous_status": { "type": ["string", "null"] },
+    "failure": { "$ref": "#/$defs/failure" },
+    "upstream": { "$ref": "#/$defs/upstream" },
+    "kernel_release": { "type": ["string", "null"] },
+    "config": { "$ref": "#/$defs/config" },
+    "build": { "$ref": "#/$defs/build" },
+    "artifacts": { "$ref": "#/$defs/artifacts" },
+    "validation": { "$ref": "#/$defs/validation" },
+    "capabilities": { "$ref": "#/$defs/capabilities" },
+    "publication": { "$ref": "#/$defs/publication" }
+  },
+  "$defs": {
+    "nullableString": { "type": ["string", "null"] },
+    "sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "failure": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage", "reason"],
+      "properties": { "stage": { "$ref": "#/$defs/nullableString" }, "reason": { "$ref": "#/$defs/nullableString" } }
+    },
+    "upstream": {
+      "type": "object", "additionalProperties": false,
+      "required": ["repository", "tag", "commit"],
+      "properties": {
+        "repository": { "const": "https://github.com/microsoft/WSL2-Linux-Kernel" },
+        "tag": { "type": "string", "pattern": "^linux-msft-wsl-[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "fileRecord": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": { "path": { "type": "string" }, "sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "config": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fragment", "normalized"],
+      "properties": { "fragment": { "$ref": "#/$defs/fileRecord" }, "normalized": { "$ref": "#/$defs/fileRecord" } }
+    },
+    "build": {
+      "type": "object", "additionalProperties": false,
+      "required": ["architecture", "compiler", "timestamp"],
+      "properties": {
+        "architecture": { "const": "x86_64" },
+        "compiler": { "$ref": "#/$defs/nullableString" },
+        "timestamp": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "sha256", "size_bytes", "kernel_release"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nullableString" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "size_bytes": { "type": ["integer", "null"], "minimum": 1 },
+        "kernel_release": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "artifacts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kernel", "modules_vhdx"],
+      "properties": { "kernel": { "$ref": "#/$defs/artifact" }, "modules_vhdx": { "$ref": "#/$defs/artifact" } }
+    },
+    "validationResult": {
+      "type": "object", "additionalProperties": false,
+      "required": ["report", "status"],
+      "properties": { "report": { "type": "string" }, "status": { "enum": ["pending", "pass", "fail"] } }
+    },
+    "validation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["build", "runtime", "validated_at"],
+      "properties": {
+        "build": { "$ref": "#/$defs/validationResult" },
+        "runtime": { "$ref": "#/$defs/validationResult" },
+        "validated_at": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "capabilities": {
+      "type": "object", "additionalProperties": false,
+      "required": ["wireguard", "ipv6", "docker", "connmark"],
+      "properties": {
+        "wireguard": { "type": ["boolean", "null"] },
+        "ipv6": { "type": ["boolean", "null"] },
+        "docker": { "type": ["boolean", "null"] },
+        "connmark": { "type": ["boolean", "null"] }
+      }
+    },
+    "publication": {
+      "type": "object", "additionalProperties": false,
+      "required": ["release_tag", "release_url", "published_at", "supersedes"],
+      "properties": {
+        "release_tag": { "$ref": "#/$defs/nullableString" },
+        "release_url": { "$ref": "#/$defs/nullableString" },
+        "published_at": { "$ref": "#/$defs/nullableString" },
+        "supersedes": { "$ref": "#/$defs/nullableString" }
+      }
+    }
+  }
+}
